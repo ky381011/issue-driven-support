@@ -14,14 +14,20 @@ module.exports = async ({ github, context, core }) => {
 
   const esc = FIELD.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const m = (issue.body || '').match(new RegExp(`^###\\s+${esc}\\s*\\r?\\n+([^\\r\\n]+)`, 'm'));
-  const suffix = m?.[1].trim();
-  if (!suffix || suffix === '_No response_') {
+  const raw = m?.[1].trim();
+  if (!raw || raw === '_No response_') {
     core.info(`Field "${FIELD}" is empty. Skipped.`);
     return;
   }
+  const suffix = raw.toLowerCase();
 
   const params = { ...context.repo, issue_number: issue.number };
   const target = `${BASE}:${suffix}`;
+  // GitHub label names are limited to 50 characters
+  if (target.length > 50) {
+    core.setFailed(`Label "${target}" exceeds 50 characters.`);
+    return;
+  }
   await github.rest.issues.addLabels({ ...params, labels: [target] });
   if (REMOVE_BASE === 'true') {
     await github.rest.issues.removeLabel({ ...params, name: BASE });

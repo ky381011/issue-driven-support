@@ -3,15 +3,12 @@ description: 開発タスク
 title: "[Develop] "
 labels: ["develop"]
 body:
-  - type: dropdown
+  - type: input
     id: suffix
     attributes:
       label: Suffix
       description: ラベル develop:<suffix> として付与されます
-      options:
-        - feature
-        - bugfix
-        - refactor
+      placeholder: feature
     validations:
       required: true
   - type: textarea
