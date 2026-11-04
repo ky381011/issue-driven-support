@@ -2,13 +2,14 @@ name: Issue label
 
 on:
   issues:
-    types: [opened]
+    types: [opened, closed]
 
 permissions:
   issues: write
 
 jobs:
-  label:
+  init:
+    if: github.event.action == 'opened'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,3 +19,13 @@ jobs:
           MODE: init
           INIT_BASE_LABEL: develop
           INIT_FIELD_LABEL: Suffix
+
+  close:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          MODE: close
+          CLOSE_BASE_LABEL: develop

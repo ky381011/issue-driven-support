@@ -2,7 +2,7 @@ name: issue-driven-supporter
 description: Issue-driven development support actions
 inputs:
   MODE:
-    description: "Feature to run (init)"
+    description: "Feature to run (init, close)"
     required: true
   GITHUB_TOKEN:
     description: Token used to call the GitHub API
@@ -18,6 +18,11 @@ inputs:
   INIT_REMOVE_BASE:
     description: '[init] Remove the base label after adding "<base>:<suffix>"'
     default: "true"
+
+  # close: Remove "<base>:*" labels when the issue is closed
+  CLOSE_BASE_LABEL:
+    description: '[close] Base of the labels to remove (removes "<base>:*")'
+    default: develop
 runs:
   using: composite
   steps:
@@ -28,10 +33,11 @@ runs:
         INIT_BASE_LABEL: ${{ inputs.INIT_BASE_LABEL }}
         INIT_FIELD_LABEL: ${{ inputs.INIT_FIELD_LABEL }}
         INIT_REMOVE_BASE: ${{ inputs.INIT_REMOVE_BASE }}
+        CLOSE_BASE_LABEL: ${{ inputs.CLOSE_BASE_LABEL }}
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
-          const modes = ['init'];
+          const modes = ['init', 'close'];
           const { MODE, ACTION_PATH } = process.env;
           if (!modes.includes(MODE)) {
             core.setFailed(`Unknown MODE "${MODE}". Available: ${modes.join(', ')}`);
