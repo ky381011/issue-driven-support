@@ -1,7 +1,11 @@
 // Replace base label with "<base>:<suffix>" using a value from the issue form.
 // Called from action.yml via actions/github-script.
 module.exports = async ({ github, context, core }) => {
-  const { BASE, FIELD, REMOVE_BASE } = process.env;
+  const {
+    INIT_BASE_LABEL: BASE,
+    INIT_FIELD_LABEL: FIELD,
+    INIT_REMOVE_BASE: REMOVE_BASE,
+  } = process.env;
   const issue = context.payload.issue;
   if (!issue) {
     core.info('Not an issue event. Skipped.');
