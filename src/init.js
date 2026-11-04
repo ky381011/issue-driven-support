@@ -16,6 +16,18 @@ module.exports = async ({ github, context, core }) => {
     return;
   }
 
+  const params = { ...context.repo, issue_number: issue.number };
+  // The parent may be linked after "opened" is sent, so re-fetch the issue
+  let parent = issue.parent_issue_url;
+  if (!parent) {
+    const { data } = await github.rest.issues.get(params);
+    parent = data.parent_issue_url;
+  }
+  if (parent) {
+    core.info('Sub-issue. Skipped.');
+    return;
+  }
+
   const esc = FIELD.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const m = (issue.body || '').match(new RegExp(`^###\\s+${esc}\\s*\\r?\\n+([^\\r\\n]+)`, 'm'));
   const raw = m?.[1].trim();
@@ -25,7 +37,6 @@ module.exports = async ({ github, context, core }) => {
   }
   const suffix = raw.toLowerCase();
 
-  const params = { ...context.repo, issue_number: issue.number };
   const target = `${BASE}:${suffix}`;
   // GitHub label names are limited to 50 characters
   if (target.length > 50) {
