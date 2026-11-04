@@ -1,0 +1,19 @@
+name: Issue label
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Use the action in this repository for testing
+      - uses: ./
+        with:
+          base-label: develop
+          field-label: Suffix

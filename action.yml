@@ -1,0 +1,28 @@
+name: issue-driven-supporter
+description: Replace base label with "<base>:<suffix>" using a value from the issue form
+inputs:
+  base-label:
+    description: Label set by the issue template (e.g. develop)
+    default: develop
+  field-label:
+    description: Label of the issue form field that holds the suffix (the "### " heading)
+    default: Suffix
+  remove-base:
+    description: Remove the base label after adding "<base>:<suffix>"
+    default: "true"
+  github-token:
+    default: ${{ github.token }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v7
+      env:
+        BASE: ${{ inputs.base-label }}
+        FIELD: ${{ inputs.field-label }}
+        REMOVE_BASE: ${{ inputs.remove-base }}
+        ACTION_PATH: ${{ github.action_path }}
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const run = require(`${process.env.ACTION_PATH}/src/init.js`);
+          await run({ github, context, core });
