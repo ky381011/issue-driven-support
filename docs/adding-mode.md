@@ -27,7 +27,7 @@ module.exports = async ({ github, context, core }) => {
 ## 2. `action.yml` の `modes` 配列にモード名を足す
 
 ```js
-const modes = ['init', 'close', 'sample'];
+const modes = ['close', 'sample'];
 ```
 
 `modes` にないモード名を指定すると、Actionはエラーで終了します。任意のファイルを読み込ませないための制限です。
@@ -64,5 +64,4 @@ inputs:
 
 | モード | 内容 | 入力 |
 |---|---|---|
-| `init` | Issue作成時に `<base>` ラベルを `<base>:<suffix>` に付け替える | `INIT_BASE_LABEL`、`INIT_FIELD_LABEL`、`INIT_REMOVE_BASE` |
 | `close` | Issueのクローズ時に `<base>:*` ラベルを外す | `CLOSE_BASE_LABEL` |

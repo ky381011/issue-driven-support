@@ -2,22 +2,11 @@ name: issue-driven-supporter
 description: Issue-driven development support actions
 inputs:
   MODE:
-    description: "Feature to run (init, close)"
+    description: "Feature to run (close)"
     required: true
   GITHUB_TOKEN:
     description: Token used to call the GitHub API
     default: ${{ github.token }}
-
-  # init: Replace base label with "<base>:<suffix>" using a value from the issue form
-  INIT_BASE_LABEL:
-    description: "[init] Label set by the issue template (e.g. develop)"
-    default: develop
-  INIT_FIELD_LABEL:
-    description: '[init] Label of the issue form field that holds the suffix (the "### " heading)'
-    default: Suffix
-  INIT_REMOVE_BASE:
-    description: '[init] Remove the base label after adding "<base>:<suffix>"'
-    default: "true"
 
   # close: Remove "<base>:*" labels when the issue is closed
   CLOSE_BASE_LABEL:
@@ -30,14 +19,11 @@ runs:
       env:
         MODE: ${{ inputs.MODE }}
         ACTION_PATH: ${{ github.action_path }}
-        INIT_BASE_LABEL: ${{ inputs.INIT_BASE_LABEL }}
-        INIT_FIELD_LABEL: ${{ inputs.INIT_FIELD_LABEL }}
-        INIT_REMOVE_BASE: ${{ inputs.INIT_REMOVE_BASE }}
         CLOSE_BASE_LABEL: ${{ inputs.CLOSE_BASE_LABEL }}
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
-          const modes = ['init', 'close'];
+          const modes = ['close'];
           const { MODE, ACTION_PATH } = process.env;
           if (!modes.includes(MODE)) {
             core.setFailed(`Unknown MODE "${MODE}". Available: ${modes.join(', ')}`);
