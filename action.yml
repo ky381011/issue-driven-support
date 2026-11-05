@@ -2,16 +2,12 @@ name: issue-driven-supporter
 description: Issue-driven development support actions
 inputs:
   MODE:
-    description: "Feature to run (close)"
+    description: Feature to run
     required: true
   GITHUB_TOKEN:
     description: Token used to call the GitHub API
     default: ${{ github.token }}
 
-  # close: Remove "<base>:*" labels when the issue is closed
-  CLOSE_BASE_LABEL:
-    description: '[close] Base of the labels to remove (removes "<base>:*")'
-    default: develop
 runs:
   using: composite
   steps:
@@ -19,11 +15,10 @@ runs:
       env:
         MODE: ${{ inputs.MODE }}
         ACTION_PATH: ${{ github.action_path }}
-        CLOSE_BASE_LABEL: ${{ inputs.CLOSE_BASE_LABEL }}
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
-          const modes = ['close'];
+          const modes = [];
           const { MODE, ACTION_PATH } = process.env;
           if (!modes.includes(MODE)) {
             core.setFailed(`Unknown MODE "${MODE}". Available: ${modes.join(', ')}`);

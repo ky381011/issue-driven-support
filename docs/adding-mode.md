@@ -27,7 +27,7 @@ module.exports = async ({ github, context, core }) => {
 ## 2. `action.yml` の `modes` 配列にモード名を足す
 
 ```js
-const modes = ['close', 'sample'];
+const modes = ['sample'];
 ```
 
 `modes` にないモード名を指定すると、Actionはエラーで終了します。任意のファイルを読み込ませないための制限です。
@@ -59,9 +59,3 @@ inputs:
     MODE: sample
     SAMPLE_MESSAGE: hi
 ```
-
-## 既存のモード
-
-| モード | 内容 | 入力 |
-|---|---|---|
-| `close` | Issueのクローズ時に `<base>:*` ラベルを外す | `CLOSE_BASE_LABEL` |
